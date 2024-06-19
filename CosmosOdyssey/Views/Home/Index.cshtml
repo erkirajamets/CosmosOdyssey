@@ -1,0 +1,67 @@
+﻿@model CosmosOdyssey.Views.Home.HomeViewModel
+
+@{
+    ViewData["Title"] = "Cosmos Adyssey";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Cosmos Adyssey</h1>
+    <form asp-action="SearchRoutes" method="post">
+    <div>
+        <label for="origin">Origin</label>
+        <select id="origin" name="origin">
+            <option value="">From</option>
+            @foreach (var planet in Model.Planets)
+            {
+                <option value="@planet">@planet</option>
+            }
+		</select> 
+        <label for="destination">Destination</label>
+		<select id="destination" name="destination">
+			<option value="">To</option>
+			@foreach (var planet in Model.Planets)
+			{
+				<option value="@planet">@planet</option>
+			}
+		</select>
+    </div>
+    <div>
+       
+    </div>
+    <button type="submit">Search</button>
+	</form>
+</div>
+
+    @if (Model.Leg != null)
+    {
+        <h3>@Model.Leg.RouteInfo.From.Name - @Model.Leg.RouteInfo.To.Name</h3>
+        <form asp-action="CreateReservation" method="post" style="display:inline;">
+
+            <ul>
+            <input type="hidden" name="legId" value="@Model.Leg.Id" />
+            @* <label for="route_@Model.Leg.RouteInfo.Id">
+                @Model.Leg.RouteInfo.From.Name to @Model.Leg.RouteInfo.To.Name - Total Distance: @Model.Leg.RouteInfo.Distance km
+            </label> *@
+            @foreach (var provider in Model.Leg.Providers)
+            {
+                <div>
+                    <input type="radio" id="provider_@provider.Id" name="providerId" value="@provider.Id" required />
+                    <label for="provider_@provider.Id">
+                        @provider.Company.Name - Total price: @provider.Price - Total travel time: @provider.TravelTime 
+                    </label>
+                </div>    
+			}
+		    </ul>
+
+            <div>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required />
+            </div>
+            <div>
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required />
+            </div>
+            <button type="submit">Reserve</button>
+        </form>
+        
+    }
